@@ -4,14 +4,12 @@ import com.example.demo.dto.request.SystemAdminRequest;
 import com.example.demo.dto.request.UserRequest;
 import com.example.demo.dto.response.SystemAdminResponse;
 import com.example.demo.dto.response.UserResponse;
-import com.example.demo.model.Patient;
 import com.example.demo.model.SystemAdmin;
 import com.example.demo.model.User;
 import com.example.demo.repository.ISystemAdminRepository;
 import com.example.demo.repository.IUserRepository;
 import com.example.demo.service.ISystemAdminService;
 import com.example.demo.service.IUserService;
-import com.example.demo.utils.RequestType;
 import com.example.demo.utils.UserType;
 import org.springframework.stereotype.Service;
 
@@ -93,7 +91,7 @@ public class SystemAdminService implements ISystemAdminService {
 
         systemAdmin.getUser().setDeleted(true);
 
-        SystemAdmin savedSystemAdmin = _iSystemAdminRepository.save(systemAdmin);
+        _iSystemAdminRepository.save(systemAdmin);
     }
 
     @Override

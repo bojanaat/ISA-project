@@ -92,7 +92,7 @@ public class PatientService implements IPatientService {
         Patient patient = _iPatientRepository.findOneById(id);
         patient.getUser().setDeleted(true);
 
-        Patient savedPatient = _iPatientRepository.save(patient);
+        _iPatientRepository.save(patient);
     }
 
     @Override
