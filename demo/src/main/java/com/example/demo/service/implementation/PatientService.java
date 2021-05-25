@@ -73,6 +73,7 @@ public class PatientService implements IPatientService {
     public PatientResponse updatePatient(PatientRequest request, UUID id) {
 
         Patient patient = _iPatientRepository.findOneById(id);
+
         patient.getUser().setFirstName(request.getFirstName());
         patient.getUser().setLastName(request.getLastName());
         patient.getUser().setAddress(request.getAddress());
@@ -91,7 +92,7 @@ public class PatientService implements IPatientService {
         Patient patient = _iPatientRepository.findOneById(id);
         patient.getUser().setDeleted(true);
 
-        Patient savedPatient = _iPatientRepository.save(patient);
+        _iPatientRepository.save(patient);
     }
 
     @Override
