@@ -73,6 +73,7 @@ public class PatientService implements IPatientService {
     public PatientResponse updatePatient(PatientRequest request, UUID id) {
 
         Patient patient = _iPatientRepository.findOneById(id);
+
         patient.getUser().setFirstName(request.getFirstName());
         patient.getUser().setLastName(request.getLastName());
         patient.getUser().setAddress(request.getAddress());
