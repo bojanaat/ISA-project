@@ -30,4 +30,7 @@ public class Pharmacy extends BaseEntity {
 
     @OneToMany(mappedBy = "pharmacy", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PharmacyAdmin> pharmacyAdmins = new ArrayList<>();
+
+    @OneToMany(mappedBy = "pharmacy", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PharmacyAdmin> pharmacySuppliers = new ArrayList<>();
 }

@@ -20,13 +20,16 @@ public class AuthController {
 
     private final IPharmacyAdminService _iPharmacyAdminService;
 
+    private final IDermatologistService _iDermatologistService;
+
     private final IAuthService _iAuthService;
 
-    public AuthController(IPatientService iPatientService, ISystemAdminService iSystemAdminService, ISupplierService iSupplierService, IPharmacyAdminService iPharmacyAdminService, IAuthService iAuthService) {
+    public AuthController(IPatientService iPatientService, ISystemAdminService iSystemAdminService, ISupplierService iSupplierService, IPharmacyAdminService iPharmacyAdminService, IDermatologistService iDermatologistService, IAuthService iAuthService) {
         _iPatientService = iPatientService;
         _iSystemAdminService = iSystemAdminService;
         _iSupplierService = iSupplierService;
         _iPharmacyAdminService = iPharmacyAdminService;
+        _iDermatologistService = iDermatologistService;
         _iAuthService = iAuthService;
     }
 
@@ -52,6 +55,12 @@ public class AuthController {
     @PostMapping("/suppliers")
     public SupplierResponse createSupplier(@RequestBody SupplierRequest request) throws Exception {
         return _iSupplierService.createSupplier(request);
+    }
+
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping("/dermatologists")
+    public DermatologistResponse createDermatologist(@RequestBody DermatologistRequest request) throws Exception {
+        return _iDermatologistService.createDermatologist(request);
     }
 
     @PostMapping("/login")

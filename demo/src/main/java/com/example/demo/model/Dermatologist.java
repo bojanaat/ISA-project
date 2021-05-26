@@ -14,7 +14,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 
 @Entity
-public class Supplier extends BaseEntity {
+public class Dermatologist extends BaseEntity {
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
