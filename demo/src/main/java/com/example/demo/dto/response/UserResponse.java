@@ -30,4 +30,6 @@ public class UserResponse {
     private String phoneNumber;
 
     private UserType userType;
+
+    private boolean setNewPassword;
 }

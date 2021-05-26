@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -45,6 +46,8 @@ public class User extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private UserType userType;
+
+    private Date firstTimeLoggedIn;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Patient patient;

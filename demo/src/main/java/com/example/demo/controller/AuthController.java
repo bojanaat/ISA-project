@@ -1,9 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.request.LoginRequest;
-import com.example.demo.dto.request.PatientRequest;
-import com.example.demo.dto.request.SupplierRequest;
-import com.example.demo.dto.request.SystemAdminRequest;
+import com.example.demo.dto.request.*;
 import com.example.demo.dto.response.LoginResponse;
 import com.example.demo.dto.response.PatientResponse;
 import com.example.demo.dto.response.SupplierResponse;
@@ -14,6 +11,8 @@ import com.example.demo.service.ISupplierService;
 import com.example.demo.service.ISystemAdminService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/auth")
@@ -55,5 +54,10 @@ public class AuthController {
     @PostMapping("/login")
     public LoginResponse login(@RequestBody LoginRequest request) throws Exception {
         return _iAuthService.login(request);
+    }
+
+    @PostMapping("/{id}/new-password")
+    public LoginResponse firstLogin(@PathVariable UUID id, @RequestBody NewPasswordRequest request) throws Exception {
+        return _iAuthService.setNewPassword(id, request);
     }
 }
