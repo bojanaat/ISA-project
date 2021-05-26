@@ -13,4 +13,6 @@ public interface ISupplierRepository extends JpaRepository<Supplier, UUID> {
     Supplier findOneById(UUID id);
 
     Set<Supplier> findAllByUser_Deleted(boolean deleted);
+
+    Set<Supplier> findAllByPharmacy_IdAndUser_Deleted(UUID pharmacyId, boolean deleted);
 }

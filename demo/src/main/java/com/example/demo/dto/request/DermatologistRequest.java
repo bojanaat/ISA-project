@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.UUID;
 
 @Data
-public class SupplierRequest {
+public class DermatologistRequest {
 
     private String email; //not possible to update
 

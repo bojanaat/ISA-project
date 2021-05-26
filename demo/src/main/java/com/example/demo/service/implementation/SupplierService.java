@@ -4,8 +4,10 @@ import com.example.demo.dto.request.SupplierRequest;
 import com.example.demo.dto.request.UserRequest;
 import com.example.demo.dto.response.SupplierResponse;
 import com.example.demo.dto.response.UserResponse;
+import com.example.demo.model.Pharmacy;
 import com.example.demo.model.Supplier;
 import com.example.demo.model.User;
+import com.example.demo.repository.IPharmacyRepository;
 import com.example.demo.repository.ISupplierRepository;
 import com.example.demo.repository.IUserRepository;
 import com.example.demo.service.ISupplierService;
@@ -22,17 +24,24 @@ public class SupplierService implements ISupplierService {
 
     private final ISupplierRepository _iSupplierRepository;
     private final IUserRepository _iUserRepository;
+    private final IPharmacyRepository _iPharmacyRepository;
 
     private final IUserService _iUserService;
 
-    public SupplierService(ISupplierRepository iSupplierRepository, IUserRepository iUserRepository, IUserService iUserService) {
+    public SupplierService(ISupplierRepository iSupplierRepository, IUserRepository iUserRepository, IPharmacyRepository iPharmacyRepository, IUserService iUserService) {
         _iSupplierRepository = iSupplierRepository;
         _iUserRepository = iUserRepository;
+        _iPharmacyRepository = iPharmacyRepository;
         _iUserService = iUserService;
     }
 
     @Override
     public SupplierResponse createSupplier(SupplierRequest request) throws Exception {
+
+        Pharmacy pharmacy = _iPharmacyRepository.findOneById(request.getPharmacyId());
+        if(pharmacy == null){
+            throw new Exception("You haven't assigned a pharmacy to the new created supplier.");
+        }
 
         UserRequest userRequest = new UserRequest();
         userRequest.setEmail(request.getEmail());
@@ -53,6 +62,7 @@ public class SupplierService implements ISupplierService {
 
         Supplier supplier = new Supplier();
         supplier.setUser(user);
+        supplier.setPharmacy(pharmacy);
 
         Supplier savedSupplier = _iSupplierRepository.save(supplier);
 
@@ -110,7 +120,7 @@ public class SupplierService implements ISupplierService {
         SupplierResponse supplierResponse = new SupplierResponse();
         User user = supplier.getUser();
         supplierResponse.setEmail(user.getEmail());
-        supplierResponse.setId(supplierResponse.getId());
+        supplierResponse.setId(supplier.getId());
         supplierResponse.setAddress(user.getAddress());
         supplierResponse.setCity(user.getCity());
         supplierResponse.setCountry(user.getCountry());
