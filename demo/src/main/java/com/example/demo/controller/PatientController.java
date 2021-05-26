@@ -1,5 +1,7 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.request.ApprovePatientRequest;
+import com.example.demo.dto.request.DenyingRegistrationRequestMessage;
 import com.example.demo.dto.request.PatientRequest;
 import com.example.demo.dto.response.PatientResponse;
 import com.example.demo.service.IPatientService;
@@ -41,5 +43,20 @@ public class PatientController {
     @GetMapping("/requests")
     public Set<PatientResponse> getAllPendingRequests() throws Exception {
         return _iPatientService.getAllPendingRequests();
+    }
+
+    @PutMapping("/approve")
+    public PatientResponse approveRegistrationRequest(@RequestBody ApprovePatientRequest request){
+        return _iPatientService.approveRegistrationRequest(request);
+    }
+
+    @PutMapping("/deny/{id}/request")
+    public void denyRegistrationRequest(@PathVariable UUID id, @RequestBody DenyingRegistrationRequestMessage request){
+        _iPatientService.denyRegistrationRequest(id, request);
+    }
+
+    @PutMapping("/activate")
+    public PatientResponse activateRegistration(@RequestBody ApprovePatientRequest request) throws Exception {
+        return _iPatientService.activateRegistration(request);
     }
 }
