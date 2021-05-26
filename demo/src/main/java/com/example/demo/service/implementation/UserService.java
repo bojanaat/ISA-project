@@ -32,7 +32,7 @@ public class UserService implements IUserService {
         List<User> users = _iUserRepository.findAllByDeleted(false);
         user.setEmail(request.getEmail());
         for (User u : users) {
-            if(u.getEmail().equals(user.getAddress())) {
+            if(u.getEmail().equals(user.getEmail())) {
                 throw new Exception("The email address you entered already exists.");
             }
         }

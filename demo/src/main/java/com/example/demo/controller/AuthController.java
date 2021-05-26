@@ -1,14 +1,8 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.request.*;
-import com.example.demo.dto.response.LoginResponse;
-import com.example.demo.dto.response.PatientResponse;
-import com.example.demo.dto.response.SupplierResponse;
-import com.example.demo.dto.response.SystemAdminResponse;
-import com.example.demo.service.IAuthService;
-import com.example.demo.service.IPatientService;
-import com.example.demo.service.ISupplierService;
-import com.example.demo.service.ISystemAdminService;
+import com.example.demo.dto.response.*;
+import com.example.demo.service.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,12 +18,15 @@ public class AuthController {
 
     private final ISupplierService _iSupplierService;
 
+    private final IPharmacyAdminService _iPharmacyAdminService;
+
     private final IAuthService _iAuthService;
 
-    public AuthController(IPatientService iPatientService, ISystemAdminService iSystemAdminService, ISupplierService iSupplierService, IAuthService iAuthService) {
+    public AuthController(IPatientService iPatientService, ISystemAdminService iSystemAdminService, ISupplierService iSupplierService, IPharmacyAdminService iPharmacyAdminService, IAuthService iAuthService) {
         _iPatientService = iPatientService;
         _iSystemAdminService = iSystemAdminService;
         _iSupplierService = iSupplierService;
+        _iPharmacyAdminService = iPharmacyAdminService;
         _iAuthService = iAuthService;
     }
 
@@ -43,6 +40,12 @@ public class AuthController {
     @PostMapping("/system-admins")
     public SystemAdminResponse createSystemAdmin(@RequestBody SystemAdminRequest request) throws Exception {
         return _iSystemAdminService.createSystemAdmin(request);
+    }
+
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping("/pharmacy-admins")
+    public PharmacyAdminResponse createPharmacyAdmin(@RequestBody PharmacyAdminRequest request) throws Exception {
+        return _iPharmacyAdminService.createPharmacyAdmin(request);
     }
 
     @ResponseStatus(HttpStatus.CREATED)
