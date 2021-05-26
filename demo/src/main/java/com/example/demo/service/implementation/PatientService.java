@@ -1,5 +1,7 @@
 package com.example.demo.service.implementation;
 
+import com.example.demo.dto.request.ApprovePatientRequest;
+import com.example.demo.dto.request.DenyingRegistrationRequestMessage;
 import com.example.demo.dto.request.PatientRequest;
 import com.example.demo.dto.request.UserRequest;
 import com.example.demo.dto.response.PatientResponse;
@@ -8,6 +10,7 @@ import com.example.demo.model.Patient;
 import com.example.demo.model.User;
 import com.example.demo.repository.IPatientRepository;
 import com.example.demo.repository.IUserRepository;
+import com.example.demo.service.IEmailService;
 import com.example.demo.service.IPatientService;
 import com.example.demo.service.IUserService;
 import com.example.demo.utils.RequestType;
@@ -25,11 +28,13 @@ public class PatientService implements IPatientService {
     private final IUserRepository _iUserRepository;
 
     private final IUserService _iUserService;
+    private final IEmailService _iEmailService;
 
-    public PatientService(IPatientRepository iPatientRepository, IUserRepository iUserRepository, IUserService iUserService) {
+    public PatientService(IPatientRepository iPatientRepository, IUserRepository iUserRepository, IUserService iUserService, IEmailService iEmailService) {
         _iPatientRepository = iPatientRepository;
         _iUserRepository = iUserRepository;
         _iUserService = iUserService;
+        _iEmailService = iEmailService;
     }
 
     @Override
@@ -118,6 +123,40 @@ public class PatientService implements IPatientService {
 
         return patients.stream().map(patient -> mapPatientToPatientResponse(patient))
                 .collect(Collectors.toSet());
+    }
+
+    @Override
+    public PatientResponse approveRegistrationRequest(ApprovePatientRequest request) {
+        Patient patient = _iPatientRepository.findOneById(request.getPatientId());
+        patient.setRequestType(RequestType.WAITING_FOR_ACTIVATION);
+        Patient savedPatient = _iPatientRepository.save(patient);
+
+        _iEmailService.approveRegistrationRequest(savedPatient);
+
+        return mapPatientToPatientResponse(savedPatient);
+    }
+
+    @Override
+    public void denyRegistrationRequest(UUID patientId, DenyingRegistrationRequestMessage request) {
+        Patient patient = _iPatientRepository.findOneById(patientId);
+        patient.setRequestType(RequestType.DENIED);
+        Patient savedPatient = _iPatientRepository.save(patient);
+
+        _iEmailService.denyRegistrationRequest(savedPatient, request.getMessage());
+    }
+
+    @Override
+    public PatientResponse activateRegistration(ApprovePatientRequest request) throws Exception {
+        Patient patient = _iPatientRepository.findOneById(request.getPatientId());
+
+        if(patient.getRequestType().equals(RequestType.APPROVED)){
+            throw new Exception("Your account has already been activated.");
+        } else if(patient.getRequestType().equals(RequestType.WAITING_FOR_ACTIVATION)){
+            patient.setRequestType(RequestType.APPROVED);
+            Patient savedPatient = _iPatientRepository.save(patient);
+            return mapPatientToPatientResponse(savedPatient);
+        }
+        throw new Exception("Your account has been deleted.");
     }
 
     private PatientResponse mapPatientToPatientResponse(Patient patient) {
