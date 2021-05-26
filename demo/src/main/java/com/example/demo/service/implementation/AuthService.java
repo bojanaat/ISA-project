@@ -70,12 +70,16 @@ public class AuthService implements IAuthService {
             }
         }
 
+        boolean flag = false;
+
         if(user.getFirstTimeLoggedIn() == null){
             user.setFirstTimeLoggedIn(new Date());
             _iUserRepository.save(user);
+            flag = true;
         }
 
         UserResponse userResponse = mapUserToUserResponse(user);
+        userResponse.setSetNewPassword(flag);
 
         LoginResponse loginResponse = new LoginResponse();
         loginResponse.setUserResponse(userResponse);
@@ -98,23 +102,17 @@ public class AuthService implements IAuthService {
 
         if(patient != null) {
             patient.getUser().setPassword(passwordEncoder.encode(request.getPassword()));
-            if(patient.getUser().getFirstTimeLoggedIn() == null) {
-                patient.getUser().setFirstTimeLoggedIn(new Date());
-            }
+            patient.getUser().setFirstTimeLoggedIn(new Date());
             _iPatientRepository.save(patient);
             userResponse = mapUserToUserResponse(patient.getUser());
         } else if(systemAdmin != null) {
             systemAdmin.getUser().setPassword(passwordEncoder.encode(request.getPassword()));
-            if(systemAdmin.getUser().getFirstTimeLoggedIn() == null) {
-                systemAdmin.getUser().setFirstTimeLoggedIn(new Date());
-            }
+            systemAdmin.getUser().setFirstTimeLoggedIn(new Date());
             _iSystemAdminRepository.save(systemAdmin);
             userResponse = mapUserToUserResponse(systemAdmin.getUser());
         } else if(supplier != null) {
             supplier.getUser().setPassword(passwordEncoder.encode(request.getPassword()));
-            if(supplier.getUser().getFirstTimeLoggedIn() == null) {
-                supplier.getUser().setFirstTimeLoggedIn(new Date());
-            }
+            supplier.getUser().setFirstTimeLoggedIn(new Date());
             _iSupplierRepository.save(supplier);
             userResponse = mapUserToUserResponse(supplier.getUser());
         }
@@ -144,7 +142,11 @@ public class AuthService implements IAuthService {
         userResponse.setLastName(user.getLastName());
         userResponse.setPhoneNumber(user.getPhoneNumber());
         userResponse.setUserType(user.getUserType());
-        userResponse.setSetNewPassword(user.getFirstTimeLoggedIn() == null);
+        if(user.getFirstTimeLoggedIn() == null) {
+            userResponse.setSetNewPassword(false);
+        } else {
+            userResponse.setSetNewPassword(true);
+        }
 
         return userResponse;
     }
