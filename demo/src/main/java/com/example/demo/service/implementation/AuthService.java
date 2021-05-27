@@ -57,7 +57,7 @@ public class AuthService implements IAuthService {
         }
 
         if(user.getUserType().equals(UserType.PATIENT)) {
-            Patient patient = _iPatientRepository.findOneById(user.getId());
+            Patient patient = _iPatientRepository.findOneByUser_Id(user.getId());
             if(patient.getRequestType().equals(RequestType.PENDING)) {
                 throw new Exception("Your registration request hasn't been approved yet. It's pending.");
             } else if(patient.getRequestType().equals(RequestType.DENIED)) {
